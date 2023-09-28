@@ -160,7 +160,6 @@ class Bank:
     
         self.nin = random.randint(1000000000, 1100000000) 
         self.acc_no = random.randint(2000000000, 2100000000) 
-        # self.amount = float(input('Amount: ')) 
         self.bal = float(0.0)
         self.bvn = random.randint(5000000000, 5100000000)
         self.password = pw.pwinput("Password: ")
@@ -192,25 +191,7 @@ class Bank:
         except:
             print(Fore.RED+"Username or Email Alredy Exits!"+Style.RESET_ALL)
             self.signUp()
-                # break
-    # def tryy(self):
-    #     try:
-    #         signup = "INSERT INTO details_table(phone_number) VALUES(%s)"
-    #         val = (self.username.strip(), self.email.strip(), self.phone_number.strip())
-    #         mycursor.execute(signup, val)
-    #         mycon.commit()
-    #         self.signIn()
-    #     except:
-    #         print(Fore.RED+"Phone Number Alredy Exits!"+Style.RESET_ALL)
-    #         self.signUp()
-
-            # mycursor.execute(signup, val)
-            # mycon.commit()  
-
-        # try:
-        #     mycursor.execute("INSERT INTO details_table()")
-        # except Error:
-        #     print("Duplicate value error")  
+          
     def transaction_type(self):
         print('''
                 Select to perform any trasanction
