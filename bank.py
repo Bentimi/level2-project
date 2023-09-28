@@ -406,14 +406,17 @@ class Bank:
             self.airtime()
         elif len(self.beneficiary) == 10 or len(self.beneficiary) == 11:
             if self.beneficiary.startswith('705') or self.beneficiary.startswith('707') or self.beneficiary.startswith('807') or self.beneficiary.startswith('811') or self.beneficiary.startswith('815') or self.beneficiary.startswith('905'):
-                self.trans = 'glo'
-                print(self.trans)
+                net = 'glo'
+                self.trans = (f'Airtime({net})')
+                print(f'Network Provider: {net}')   
             elif self.beneficiary.startswith('701') or self.beneficiary.startswith('708') or self.beneficiary.startswith('802') or self.beneficiary.startswith('808') or self.beneficiary.startswith('812') or self.beneficiary.startswith('901') or self.beneficiary.startswith('902') or self.beneficiary.startswith('904') or self.beneficiary.startswith('907') or self.beneficiary.startswith('912') :
-                self.trans = 'Airtel'
-                print(self.trans)
+                net = 'Airtel'
+                self.trans = (f'Airtime({net})')
+                print(f'Network Provider: {net}')   
             elif self.beneficiary.startswith('7025') or self.beneficiary.startswith('7026') or self.beneficiary.startswith('703') or self.beneficiary.startswith('706') or self.beneficiary.startswith('803') or self.beneficiary.startswith('806') or self.beneficiary.startswith('810') or self.beneficiary.startswith('813') or self.beneficiary.startswith('814') or self.beneficiary.startswith('816') or self.beneficiary.startswith('903') or self.beneficiary.startswith('913') or self.beneficiary.startswith('916'):
-                self.trans = 'MTN'
-                print(self.trans)
+                net = 'MTN'
+                self.trans = (f'Airtime({net})')
+                print(f'Network Provider: {net}')   
             else:
                 self.trans = input('Network Provider: ')
         else:
@@ -448,18 +451,6 @@ class Bank:
                 print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
                 self.transfer()
     def airtime_self(self):
-        if self.beneficiary.startswith('705') or self.beneficiary.startswith('707') or self.beneficiary.startswith('807') or self.beneficiary.startswith('811') or self.beneficiary.startswith('815') or self.beneficiary.startswith('905'):
-                self.trans = 'glo'
-                print(self.trans)
-        elif self.beneficiary.startswith('701') or self.beneficiary.startswith('708') or self.beneficiary.startswith('802') or self.beneficiary.startswith('808') or self.beneficiary.startswith('812') or self.beneficiary.startswith('901') or self.beneficiary.startswith('902') or self.beneficiary.startswith('904') or self.beneficiary.startswith('907') or self.beneficiary.startswith('912') :
-            self.trans = 'Airtel'
-            print(self.trans)
-        elif self.beneficiary.startswith('7025') or self.beneficiary.startswith('7026') or self.beneficiary.startswith('703') or self.beneficiary.startswith('706') or self.beneficiary.startswith('803') or self.beneficiary.startswith('806') or self.beneficiary.startswith('810') or self.beneficiary.startswith('813') or self.beneficiary.startswith('814') or self.beneficiary.startswith('816') or self.beneficiary.startswith('903') or self.beneficiary.startswith('913') or self.beneficiary.startswith('916'):
-            self.trans = 'MTN'
-            print(self.trans)
-        else:
-            self.trans = input('Network Provider: ')
-        self.amount = float(input('Amount: '))
         query = "SELECT * FROM details_table WHERE username=%s AND password=%s"
         val = (self.login, self.pwd)
         mycursor.execute(query,val)
@@ -469,23 +460,39 @@ class Bank:
             self.login = output[0][3]
             self.pin = output[0][12]
             balance = output[0][10]
-            if self.amount >= 100.00:
-                if balance > self.amount:
-                    self.balance = balance - self.amount
-                    query = 'UPDATE details_table SET bal=%s WHERE username=%s'
-                    val = (self.balance, self.login) 
-                    mycursor.execute(query, val)
-                    mycon.commit()   
-                    self.remark = 'Successful'
-                    self.pin_confirmation()
-                    self.air_trans()
-                    self.another()
-                else:
-                       print(Fore.RED+'Insufficient Fund!'+Style.RESET_ALL)
-                       self.transfer()  
+            
+            if self.beneficiary.startswith('705') or self.beneficiary.startswith('707') or self.beneficiary.startswith('807') or self.beneficiary.startswith('811') or self.beneficiary.startswith('815') or self.beneficiary.startswith('905'):
+                    net = 'glo'
+                    self.trans = (f'Airtime({net})')
+                    print(f'Network Provider: {net}')
+            elif self.beneficiary.startswith('701') or self.beneficiary.startswith('708') or self.beneficiary.startswith('802') or self.beneficiary.startswith('808') or self.beneficiary.startswith('812') or self.beneficiary.startswith('901') or self.beneficiary.startswith('902') or self.beneficiary.startswith('904') or self.beneficiary.startswith('907') or self.beneficiary.startswith('912') :
+                net = 'Airtel'
+                self.trans = (f'Airtime({net})')
+                print(f'Network Provider: {net}')
+            elif self.beneficiary.startswith('7025') or self.beneficiary.startswith('7026') or self.beneficiary.startswith('703') or self.beneficiary.startswith('706') or self.beneficiary.startswith('803') or self.beneficiary.startswith('806') or self.beneficiary.startswith('810') or self.beneficiary.startswith('813') or self.beneficiary.startswith('814') or self.beneficiary.startswith('816') or self.beneficiary.startswith('903') or self.beneficiary.startswith('913') or self.beneficiary.startswith('916'):
+                net = 'MTN'
+                self.trans = (f'Airtime({net})')
+                print(f'Network Provider: {net}')
             else:
-                print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
-                self.transfer()
+                self.trans = input('Network Provider: ')
+                self.amount = float(input('Amount: '))
+                if self.amount >= 100.00:
+                    if balance > self.amount:
+                        self.balance = balance - self.amount
+                        query = 'UPDATE details_table SET bal=%s WHERE username=%s'
+                        val = (self.balance, self.login) 
+                        mycursor.execute(query, val)
+                        mycon.commit()   
+                        self.remark = 'Successful'
+                        self.pin_confirmation()
+                        self.air_trans()
+                        self.another()
+                    else:
+                        print(Fore.RED+'Insufficient Fund!'+Style.RESET_ALL)
+                        self.transfer()  
+                else:
+                    print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
+                    self.transfer()
     def air_trans(self):
         query = "INSERT INTO transaction_table(username,trans_type, beneficiary_no,amount, remark, date_time,pin) VALUES(%s,%s,%s,%s,%s,%s,%s)"
         var = (self.login, self.trans, self.beneficiary, self.amount, self.remark, self.date,self.pin)
@@ -626,36 +633,48 @@ class Bank:
         self.pn = pw.pwinput('Old Pin: ')
         self.pwd1 = pw.pwinput('New Pin: ')
         self.new_pwd = pw.pwinput('Confirm New Pin: ')
-        # if self.pwd1 == self.new_pwd:
-        #     query = "UPDATE details_table SET pin=%s WHERE username=%s"
-        #     val = (self.new_pwd, self.login)
-        #     mycursor.execute(query, val)
-        #     mycon.commit() 
+        myquery = 'SELECT * FROM details_table WHERE pin=%s AND username=%s'
+        myval = (self.pn, self.login)
+        mycursor.execute(myquery, myval)
+        details = mycursor.fetchall()
+        if details:
+            self.login = details[0][3]
+            self.pwd = details[0][11]
+            self.pn = details[0][12]
+            if len(self.pwd1) == 4 and  len(self.new_pwd) == 4:
+                self.pnn()
+                query = "UPDATE details_table SET pin=%s WHERE username=%s"
+                val = (self.new_pwd, self.login)
+                mycursor.execute(query, val)
+                mycon.commit()
+                # self.pnn()
+                # que = 'UPDATE transaction_table SET pin=%s WHERE username=%s'
+                # var = (self.new_pwd, self.login)
+                # mycursor.execute(que,var)
+                # mycon.commit()
+                # print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
+                # time.sleep(2)
+                # print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
+                self.another()
+            elif self.pwd1 != self.new_pwd:
+                print("Checking...") 
+                time.sleep(2)
+                print(Fore.RED+'Password does not match'+Style.RESET_ALL)
+                print('Press 0 to Terminate or 1 to continue')  
+                user = input('Select: ')
+                if user == '0':
+                    sys.exit()
+                elif user == '1':
+                    self.transaction_type()
 
-        if len(self.pwd1) == 4 and  len(self.new_pwd) == 4:
-            que = 'UPDATE transaction_table SET pin=%s WHERE username=%s'
-            var = (self.new_pwd, self.login)
-            mycursor.execute(que,var)
-            mycon.commit()
-            print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
-            time.sleep(2)
-            print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
-            self.another()
-        elif self.pwd1 != self.new_pwd:
-            print("Checking...") 
-            time.sleep(2)
-            print(Fore.RED+'Password does not match'+Style.RESET_ALL)
-            print('Press 0 to Terminate or 1 to continue')  
-            user = input('Select: ')
-            if user == '0':
-                sys.exit()
-            elif user == '1':
-                self.transaction_type()
-
+            else:
+                    print('Loading...')
+                    time.sleep(2)
+                    print(Fore.RED+"pin should be 4 digits"+Style.RESET_ALL) 
         else:
                 print('Loading...')
                 time.sleep(2)
-                print(Fore.RED+"pin should be 4 digits"+Style.RESET_ALL) 
+                print(Fore.RED+"Invalid Pin"+Style.RESET_ALL)             
                 # print(Fore.RED+"Try again!"+Style.RESET_ALL) 
 
         
@@ -671,6 +690,27 @@ class Bank:
             #     self.transaction_type() 
             # else:
                 self.pin_change() 
+
+    def pnn(self):
+        myquery = 'SELECT * FROM transaction_table WHERE username=%s AND pin=%s'
+        myval = (self.login, self.pn)
+        mycursor.execute(myquery, myval)
+        details = mycursor.fetchall()
+        if details:
+            self.login = details[0][1]
+            # self.pwd = details[0][11]
+            self.pn = details[0][7]
+            # if self.pn == details[0][7]:    
+            que = 'UPDATE transaction_table SET pin=%s WHERE username=%s'
+            var = (self.new_pwd, self.login)
+            mycursor.execute(que,var)
+            mycon.commit()
+            print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
+            time.sleep(2)
+            print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
+            # self.another()
+        else:
+            print('Invalid')   
 
     def another(self):
         print('Enter for Another Transaction or 0 to exit')
