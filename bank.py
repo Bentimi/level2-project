@@ -647,15 +647,8 @@ class Bank:
                 val = (self.new_pwd, self.login)
                 mycursor.execute(query, val)
                 mycon.commit()
-                # self.pnn()
-                # que = 'UPDATE transaction_table SET pin=%s WHERE username=%s'
-                # var = (self.new_pwd, self.login)
-                # mycursor.execute(que,var)
-                # mycon.commit()
-                # print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
-                # time.sleep(2)
-                # print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
                 self.another()
+
             elif self.pwd1 != self.new_pwd:
                 print(Fore.YELLOW+"Loading..."+Style.RESET_ALL) 
                 time.sleep(2)
@@ -684,9 +677,7 @@ class Bank:
         details = mycursor.fetchall()
         if details:
             self.login = details[0][1]
-            # self.pwd = details[0][11]
-            self.pn = details[0][7]
-            # if self.pn == details[0][7]:    
+            self.pn = details[0][7]  
             que = 'UPDATE transaction_table SET pin=%s WHERE username=%s'
             var = (self.new_pwd, self.login)
             mycursor.execute(que,var)
@@ -694,9 +685,8 @@ class Bank:
             print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
             time.sleep(2)
             print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
-            # self.another()
         else:
-            print('Invalid')   
+            print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)   
 
     def another(self):
         print('Enter for Another Transaction or 0 to exit')
