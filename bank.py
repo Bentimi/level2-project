@@ -707,12 +707,20 @@ class Bank:
         ''')
        user = input('Select: ')
        if user == '1':
+           net = 'Bills'
+           self.trans = (f'{net}(Electricity)')
            print('Wait')
        elif user == '2':
+           net = 'Bills'
+           self.trans = (f'{net}(Water)')
            print('Hold')
        elif user == '3':
+           net = 'Bills'
+           self.trans = (f'{net}(Internet)')
            print('Duro')
        elif user == '4':
+           net = 'Bills'
+           self.trans = (f'{net}(TV)')
            print('Awe')
        else:
            print(Fore.RED+'Invalid'+Style.RESET_ALL)                
