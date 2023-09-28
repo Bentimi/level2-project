@@ -197,9 +197,9 @@ class Bank:
                 Select to perform any trasanction
                 1.  Transfer                 5. Account Balance
                 2.  Deposit                  6. Transaction History
-                3.  Airtime(self)            00. Inquiries
-                4.  Airtime(Others)
-                22. Refresh
+                3.  Airtime(self)            7. Pay Bills
+                4.  Airtime(Others)          00. Inquiries
+                22. Refresh                  
         ''')
         inp = (input('Select: '))
         # try:
@@ -216,11 +216,13 @@ class Bank:
         elif inp == '4':
             self.airtime()
         elif inp == '5':
-            self.trans = 'Inquiries'
+            # self.trans = 'Inquiries'
             self.acc_bal()
         elif inp == '6':
-            self.trans = 'Inquiries'
+            # self.trans = 'Inquiries'
             self.trans_history()
+        elif inp == '7':
+            self.bills()
         elif inp == '00':
             self.inq()
         elif inp == '22':
@@ -557,7 +559,7 @@ class Bank:
 
     def acc_bal(self):
         pwd = pw.pwinput('Pin: ')
-        print('Fectching...')
+        print(Fore.GREEN+'Fectching...'+Style.RESET_ALL)
         time.sleep(3)
         query = "SELECT * FROM details_table WHERE username=%s AND pin=%s"
         val = (self.login, pwd)
@@ -571,9 +573,9 @@ class Bank:
             acc_no = output[0][9]
             balance = output[0][10]
             print(f'''
-                        Name: {self.lastname} {self.othernames}
+                        {Fore.YELLOW}Name: {self.lastname} {self.othernames}
                         Account Number: {acc_no}
-                        Balance: N{balance}
+                        Balance: N{balance}{Style.RESET_ALL}
             ''')
             self.another()
         else:
@@ -695,7 +697,30 @@ class Bank:
         else:
             print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)   
 
+    def bills(self):
+       time.sleep(1)
+       print(f'''
+                1. Electricity
+                2. Water
+                3. Internet
+                4. TV
+        ''')
+       user = input('Select: ')
+       if user == '1':
+           print('Wait')
+       elif user == '2':
+           print('Hold')
+       elif user == '3':
+           print('Duro')
+       elif user == '4':
+           print('Awe')
+       else:
+           print(Fore.RED+'Invalid'+Style.RESET_ALL)                
+       self.pin_confirmation()
+       self.another()
+
     def another(self):
+        time.sleep(1)
         print('Enter for Another Transaction or 0 to exit')
         user = input('Select: ')
         if user == "0":
