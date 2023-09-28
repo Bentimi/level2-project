@@ -471,7 +471,6 @@ class Bank:
             balance = output[0][10]
             if self.amount >= 100.00:
                 if balance > self.amount:
-                # SELECT
                     self.balance = balance - self.amount
                     query = 'UPDATE details_table SET bal=%s WHERE username=%s'
                     val = (self.balance, self.login) 
@@ -482,11 +481,6 @@ class Bank:
                     self.air_trans()
                     self.another()
                 else:
-                    #    self.remark = 'Pending'
-                    #    query = 'UPDATE transaction_table SET remark, beneficiary_no, username,trans_type, amount, pin WHERE username =%s'
-                    #    val = (self.login)
-                    #    mycursor.execute(query, val)
-                    #    mycon.commit()
                        print(Fore.RED+'Insufficient Fund!'+Style.RESET_ALL)
                        self.transfer()  
             else:
@@ -503,16 +497,10 @@ class Bank:
                 {Fore.YELLOW}N{self.amount}K has been debited from your account by {self.trans} network provider.
                 Your bal is N{self.balance}K{Style.RESET_ALL}
         ''')
-        self.another()
-
-        # else:
-        #     print(Fore.RED+'minimum bal is N100.00!'+Style.RESET_ALL)
-        #     self.transfer() 
+        self.another() 
 
     def dd(self):
         self.pin =  self.pwd
-        # print(Fore.YELLOW+'Loading...'+Style.RESET_ALL)
-        # time.sleep(1)
         query = 'SELECT * FROM details_table WHERE username =%s AND password =%s'
         val = (self.login, self.pin)
         mycursor.execute(query, val)
