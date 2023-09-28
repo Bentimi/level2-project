@@ -657,9 +657,9 @@ class Bank:
                 # print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
                 self.another()
             elif self.pwd1 != self.new_pwd:
-                print("Checking...") 
+                print(Fore.YELLOW+"Loading..."+Style.RESET_ALL) 
                 time.sleep(2)
-                print(Fore.RED+'Password does not match'+Style.RESET_ALL)
+                print(Fore.RED+'pin does not match'+Style.RESET_ALL)
                 print('Press 0 to Terminate or 1 to continue')  
                 user = input('Select: ')
                 if user == '0':
@@ -675,20 +675,6 @@ class Bank:
                 print('Loading...')
                 time.sleep(2)
                 print(Fore.RED+"Invalid Pin"+Style.RESET_ALL)             
-                # print(Fore.RED+"Try again!"+Style.RESET_ALL) 
-
-        
-        # elif self.pwd1 != self.new_pwd:
-            # print("Checking...") 
-            # time.sleep(2)
-            # print(Fore.RED+'Password does not match'+Style.RESET_ALL)
-            # print('Press 0 to Terminate or 1 to continue')  
-            # user = input('Select: ')
-            # if user == '0':
-            #     sys.exit()
-            # elif user == '1':
-            #     self.transaction_type() 
-            # else:
                 self.pin_change() 
 
     def pnn(self):
