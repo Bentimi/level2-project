@@ -626,28 +626,21 @@ class Bank:
         self.pn = pw.pwinput('Old Pin: ')
         self.pwd1 = pw.pwinput('New Pin: ')
         self.new_pwd = pw.pwinput('Confirm New Pin: ')
-        if self.pwd1 == self.new_pwd:
-            query = "UPDATE details_table SET pin=%s WHERE username=%s"
-            val = (self.new_pwd, self.login)
-            mycursor.execute(query, val)
-            mycon.commit() 
+        # if self.pwd1 == self.new_pwd:
+        #     query = "UPDATE details_table SET pin=%s WHERE username=%s"
+        #     val = (self.new_pwd, self.login)
+        #     mycursor.execute(query, val)
+        #     mycon.commit() 
 
-            if self.pwd1 == self.new_pwd:
-                que = 'UPDATE transaction_table SET pin=%s WHERE username=%s'
-                var = (self.new_pwd, self.login)
-                mycursor.execute(que,var)
-                mycon.commit()
-                print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
-                time.sleep(2)
-                print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
-                self.another()
-        
-            else:
-                time.sleep(2)
-                print("Failed...") 
-                print("Try again later!") 
-                
-            self.trans_pin() 
+        if len(self.pwd1) == 4 and  len(self.new_pwd) == 4:
+            que = 'UPDATE transaction_table SET pin=%s WHERE username=%s'
+            var = (self.new_pwd, self.login)
+            mycursor.execute(que,var)
+            mycon.commit()
+            print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
+            time.sleep(2)
+            print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
+            self.another()
         elif self.pwd1 != self.new_pwd:
             print("Checking...") 
             time.sleep(2)
@@ -657,8 +650,26 @@ class Bank:
             if user == '0':
                 sys.exit()
             elif user == '1':
-                self.transaction_type() 
-            else:
+                self.transaction_type()
+
+        else:
+                print('Loading...')
+                time.sleep(2)
+                print(Fore.RED+"pin should be 4 digits"+Style.RESET_ALL) 
+                # print(Fore.RED+"Try again!"+Style.RESET_ALL) 
+
+        
+        # elif self.pwd1 != self.new_pwd:
+            # print("Checking...") 
+            # time.sleep(2)
+            # print(Fore.RED+'Password does not match'+Style.RESET_ALL)
+            # print('Press 0 to Terminate or 1 to continue')  
+            # user = input('Select: ')
+            # if user == '0':
+            #     sys.exit()
+            # elif user == '1':
+            #     self.transaction_type() 
+            # else:
                 self.pin_change() 
 
     def another(self):
