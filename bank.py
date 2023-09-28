@@ -513,9 +513,7 @@ class Bank:
         else:
             print(Fore.RED+'Incorrect Pin'+Style.RESET_ALL)
             self.pin_confirmation()
-
-        # t = datetime.now()
-        # self.date = t.strftime("%d/%m/%Y %H:%M:%S")         
+         
     def trans_history(self):
         pwd = pw.pwinput('Pin: ')
         print('Fetching...')
@@ -537,7 +535,6 @@ class Bank:
             for row in rows:
                 table.add_row(row)
             print(f'{Back.BLUE}{table}{Style.RESET_ALL}')
-            # print(f'{Fore.BLACK}{table}{Style.RESET_ALL}')
             self.another()
         else:
             print(Fore.YELLOW+'No Transaction History Yet!'+Style.RESET_ALL)
@@ -606,8 +603,6 @@ class Bank:
             password = details[0][11]
             if pwd1 == pwd:
                 print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
-                # time.sleep(1)
-                # print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
                 query = "UPDATE details_table SET password=%s WHERE username=%s"
                 val = (pwd, self.login)
                 mycursor.execute(query, val)
@@ -668,7 +663,6 @@ class Bank:
 
     def another(self):
         print('Enter for Another Transaction or 0 to exit')
-        # inp = "0"
         user = input('Select: ')
         if user == "0":
             print(Fore.RED+'Exit!'+Style.RESET_ALL)
@@ -700,27 +694,5 @@ class Bank:
         var = (self.login, self.trans, self.beneficiary, self.amount, self.remark, self.date,self.pin)
         mycursor.execute(mytran, var)
         mycon.commit()    
-    # def date_time(self):
-    #     t = datetime.now()
-    #     self.date = t.strftime("%d/%m/%Y %H:%M:%S")   
-    #     # print(t)
-    #     # print(self.date)   
-    #     self.tt()
-        # self.review()
-    # def review(self): 
-        # signup = "INSERT INTO details_table(lastname, othernames, username, address, email, phone_number, bvn, nin, acc_no, bal, password, pin) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        # val = (self.lastname.strip().upper(), self.othernames.strip().upper(), self.username.strip(), self.address.strip(), self.email.strip(), self.phone_number.strip(), self.bvn, self.nin, self.acc_no, self.balance, self.password, self.pin)
-        # mycursor.execute(signup, val)
-        # mycon.commit()                      
-
-        # signup = "INSERT INTO details_table(lastname, othernames, username, address, email, phone_number, bvn, nin, acc_no, bal, password, pin) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        # val = (self.lastname, self.othernames, self.username.strip(), self.address.strip(), self.email.strip(), self.phone_number.strip(), self.bvn, self.nin, self.acc_no, self.bal, self.password, self.pin)
-        # mycursor.execute(signup, val)
-        # mycon.commit()
-
-        # mytran = "INSERT INTO transaction_table(username,trans_type, beneficiary_no, remark) VALUES(%s,%s,%s,%s)"
-        # var = (self.username, self.trans, self.beneficiary, self.remark)
-        # mycursor.execute(mytran, var)
-        # mycon.commit()
-
+        
 bank = Bank()
