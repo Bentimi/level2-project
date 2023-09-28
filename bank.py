@@ -621,14 +621,21 @@ class Bank:
                 print("Checking...") 
                 time.sleep(2)
                 print(Fore.RED+'Password does not match'+Style.RESET_ALL)
-                print('Press 0 to Terminate or 1 to continue')  
+                print('Press 0 to Terminate or 1 to try again')  
                 user = input('Select: ')
                 if user == '0':
                     sys.exit()
                 elif user == '1':
                     self.transaction_type() 
                 else:
-                    self.password_change()      
+                    self.password_change()  
+            else:
+                print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)
+                self.password_change()    
+        else:
+            print(Fore.RED+'Wrong Input!'+Style.RESET_ALL)
+            self.password_change()    
+
     def pin_change(self):
         self.pn = pw.pwinput('Old Pin: ')
         self.pwd1 = pw.pwinput('New Pin: ')
