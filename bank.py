@@ -155,7 +155,7 @@ class Bank:
         self.othernames = input('Other Names: ')
         self.address = input('Address: ')
         self.email = input('Email: ')
-        self.phone_number = input('Phone number: ')
+        self.phone_number = input('Phone number: +234 ')
         self.username = input('Username: ')
     
         self.nin = random.randint(1000000000, 1100000000) 
@@ -168,12 +168,12 @@ class Bank:
         print('Loading...')
         time.sleep(2)
 
-        print(f'''
-                    Hi! {self.username}
-                    Name {self.lastname.upper()} {self.othernames.upper()}
-                    Account Number: {self.acc_no}       bvn: {self.bvn}     nin: {self.nin}
-                    Phone Number: {self.phone_number}    Email: {self.email.strip()}         
-        ''')
+        # print(f'''
+        #             Hi! {self.username}
+        #             Name {self.lastname.upper()} {self.othernames.upper()}
+        #             Account Number: {self.acc_no}       bvn: {self.bvn}     nin: {self.nin}
+        #             Phone Number: {self.phone_number}    Email: {self.email.strip()}         
+        # ''')
 
 
         # signup = "INSERT INTO details_table(lastname, othernames, username, address, email, phone_number, bvn, nin, acc_no, bal, password, pin) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
@@ -187,10 +187,21 @@ class Bank:
             val = (self.lastname.strip().upper(), self.othernames.strip().upper(), self.username.strip(), self.address.strip(), self.email.strip(), self.phone_number.strip(), self.bvn, self.nin, self.acc_no, self.bal, self.password, self.pin)
             mycursor.execute(signup, val)
             mycon.commit()
+
+
+            print(f'''
+                    Hi! {self.username}
+                    Name {self.lastname.upper()} {self.othernames.upper()}
+                    Account Number: {self.acc_no}       bvn: {self.bvn}     nin: {self.nin}
+                    Phone Number: {self.phone_number}    Email: {self.email.strip()}         
+            ''')
             self.pre()
-        except:
+            sys.exit()
+        except NameError:
             print(Fore.RED+"Username or Email Alredy Exits!"+Style.RESET_ALL)
-            self.signUp()
+            # self.signUp()
+        except ValueError:
+            print('woos')    
           
     def transaction_type(self):
         print('''
@@ -375,31 +386,34 @@ class Bank:
                     self.transfer()
 
     def deposit(self):
-        try:  
-            self.amount = float(input('Amount: '))
-            query = "SELECT * FROM details_table WHERE username=%s AND password=%s"
-            val = (self.login, self.pwd)
-            mycursor.execute(query,val)
-            output = mycursor.fetchall()
-            if output:
-                self.login = output[0][3]
-                self.pin = output[0][12]
-                balance = output[0][10]
-                if self.amount >= 100.00:
-                    self.balance = balance + self.amount
-                    query = 'UPDATE details_table SET bal=%s WHERE username=%s'
-                    val = (self.balance, self.login) 
-                    mycursor.execute(query, val)
-                    mycon.commit()   
-                    self.pin_confirmation()
-                    print('Transaction successful')
-                    self.another()
-                else:
-                    print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
-                self.deposit()
-        except:
-            print(Fore.RED+' Check Your Input! '+Style.RESET_ALL)
+        # try:  
+        self.amount = float(input('Amount: '))
+        # self.beneficiary
+        query = "SELECT * FROM details_table WHERE username=%s AND password=%s"
+        val = (self.login, self.pwd)
+        mycursor.execute(query,val)
+        output = mycursor.fetchall()
+        if output:
+            self.login = output[0][3]
+            self.pin = output[0][12]
+            balance = output[0][10]
+            self.beneficiary = output[0][9]
+            if self.amount >= 100.00:
+                self.balance = balance + self.amount
+                query = 'UPDATE details_table SET bal=%s WHERE username=%s'
+                val = (self.balance, self.login) 
+                mycursor.execute(query, val)
+                mycon.commit()   
+                self.remark = 'Successful'
+                self.pin_confirmation()
+                print('Transaction successful')
+                self.another()
+            else:
+                print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
             self.deposit()
+        # except:
+        #     print(Fore.RED+' Check Your Input! '+Style.RESET_ALL)
+        #     self.deposit()
            
     def airtime(self):
         self.beneficiary = input("Phone number: +234 ")
@@ -477,24 +491,24 @@ class Bank:
                 print(f'Network Provider: {net}')
             else:
                 self.trans = input('Network Provider: ')
-                self.amount = float(input('Amount: '))
-                if self.amount >= 100.00:
-                    if balance > self.amount:
-                        self.balance = balance - self.amount
-                        query = 'UPDATE details_table SET bal=%s WHERE username=%s'
-                        val = (self.balance, self.login) 
-                        mycursor.execute(query, val)
-                        mycon.commit()   
-                        self.remark = 'Successful'
-                        self.pin_confirmation()
-                        self.air_trans()
-                        self.another()
-                    else:
-                        print(Fore.RED+'Insufficient Fund!'+Style.RESET_ALL)
-                        self.transfer()  
+            self.amount = float(input('Amount: '))
+            if self.amount >= 100.00:
+                if balance > self.amount:
+                    self.balance = balance - self.amount
+                    query = 'UPDATE details_table SET bal=%s WHERE username=%s'
+                    val = (self.balance, self.login) 
+                    mycursor.execute(query, val)
+                    mycon.commit()   
+                    self.remark = 'Successful'
+                    self.pin_confirmation()
+                    self.air_trans()
+                    self.another()
                 else:
-                    print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
-                    self.transfer()
+                    print(Fore.RED+'Insufficient Fund!'+Style.RESET_ALL)
+                    self.transfer()  
+            else:
+                print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
+                self.transfer()
     def air_trans(self):
         query = "INSERT INTO transaction_table(username,trans_type, beneficiary_no,amount, remark, date_time,pin) VALUES(%s,%s,%s,%s,%s,%s,%s)"
         var = (self.login, self.trans, self.beneficiary, self.amount, self.remark, self.date,self.pin)
@@ -705,27 +719,40 @@ class Bank:
                 3. Internet
                 4. TV
         ''')
+    #    self.amount = float(input('Amount: '))
+    #    self.beneficiary = random.randint(1000000000, 1999999999)
        user = input('Select: ')
        if user == '1':
            net = 'Bills'
            self.trans = (f'{net}(Electricity)')
+           self.bill_inp()
            print('Wait')
        elif user == '2':
            net = 'Bills'
            self.trans = (f'{net}(Water)')
+           self.bill_inp()
            print('Hold')
        elif user == '3':
            net = 'Bills'
            self.trans = (f'{net}(Internet)')
+           self.bill_inp()
            print('Duro')
        elif user == '4':
            net = 'Bills'
            self.trans = (f'{net}(TV)')
+           self.bill_inp()
            print('Awe')
        else:
            print(Fore.RED+'Invalid'+Style.RESET_ALL)                
-       self.pin_confirmation()
-       self.another()
+    #    self.pin_confirmation()
+    #    self.another()
+
+    def bill_inp(self):
+        self.amount = float(input('Amount: '))
+        self.beneficiary = random.randint(1000000000, 1999999999)
+        self.remark = 'Successful'
+        self.pin_confirmation()
+        self.another()
 
     def another(self):
         time.sleep(1)
