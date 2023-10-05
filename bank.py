@@ -75,9 +75,7 @@ class Bank:
         else:
             print(f'{Fore.RED} Invalid Input! Try again{Style.RESET_ALL}')  
             self.landingPage()  
-        # except:
-        #     print(print(f'{Fore.RED} Invalid Input! Try again{Style.RESET_ALL}')  ) 
-        #     self.landingPage()        
+
     def presignIN(self):
         print(f"""
                     Select an option to continue
@@ -96,7 +94,7 @@ class Bank:
         else:
             print(f'{Fore.RED} Invalid Input! Try again{Style.RESET_ALL}')
             self.presignIN()
-
+    # Confirmation Before SignIn
     def pre(self):
         print(Fore.GREEN+"  1"+Style.RESET_ALL+" for forgotten password"+Fore.GREEN+" ENTER "+Style.RESET_ALL+" to continue")
         user = input("Select: ")
@@ -105,6 +103,7 @@ class Bank:
         else: 
             self.signIn()  
 
+    # Altering of Password
     def change(self):
         self.inp_user = input("Username: ")
         pwd1 = pw.pwinput('Change Password: ')
@@ -130,7 +129,8 @@ class Bank:
                 self.signIn() 
             else:
                 self.change()       
-             
+
+    # SignIn        
     def  signIn(self):  
             self.login = input('User name: ') 
             self.pwd =  pw.pwinput('Password: ')
@@ -163,14 +163,12 @@ class Bank:
                 else:
                         print(Fore.RED+'Invalid Option!'+Style.RESET_ALL)
                         self.signIn()
-        
+    # SignUp  
     def  signUp(self):  
         self.lastname = input('Last Name: ')
         self.othernames = input('Other Names: ')
         self.address = input('Address: ')
         self.check()
-        # self.email = email_val()
-        # self.email = self.check()
         self.phone_check()
         self.username = input('Username: ')
     
@@ -202,7 +200,8 @@ class Bank:
                             Phone Number: {self.phone_number}    Email: {self.email.strip()}         
                     ''')
             self.pre()       
-        
+
+    # Email Pattern Confirmation    
     def check(self):
         # defined pattern 
         pattern = re.compile(r'^[a-zA-Z0-9_%+]+@[a-zA-Z0-9_]+\.[a-zA-Z]+$')
@@ -213,7 +212,6 @@ class Bank:
         if matches:
             print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
             time.sleep(2)
-            # print(Fore.GREEN+"Valid Email"+Style.RESET_ALL)
         else:
             print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
             time.sleep(2)
@@ -221,6 +219,7 @@ class Bank:
             
             self.check()
     
+    # Phone Number Pattern Confirmation
     def phone_check(self):
             self.phone_number = input('Phone number: +234 ')
             if len(self.phone_number) != 10:
@@ -230,8 +229,8 @@ class Bank:
                 self.phone_check()
             else:
                 pass
-                # print(Fore.GREEN+'Valid'+Style.RESET_ALL) 
 
+    # Transaction Type
     def transaction_type(self):
         print('''
                 Select to perform any trasanction
@@ -270,7 +269,7 @@ class Bank:
         else:
             print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)
             self.transaction_type()
-
+    # Registered Account
     def available(self):
             mycursor.execute('SELECT username, acc_no, lastname, othernames FROM details_table')
             rows = mycursor.fetchall()
@@ -283,6 +282,7 @@ class Bank:
             print(f'{Back.BLUE}{table}{Style.RESET_ALL}')
             self.acc_name()
 
+    # Account Name Verification
     def acc_name(self):
         self.user = input("Beneficiary's Username: ")
         self.beneficiary = input('Account No: ')  
@@ -293,9 +293,7 @@ class Bank:
             output = mycursor.fetchall()
             if output:
                 self.user = output[0][3]
-                # self.pin = output[0][12]
                 acc_no = output[0][9]
-                # balance = output[0][10]
                 lastname = output[0][1]
                 othernames = output[0][2]
                 
@@ -309,31 +307,27 @@ class Bank:
             else:
                 print(Fore.RED+'Invalid Account Number'+Style.RESET_ALL)
                 self.acc_name()    
-
+    
+    # Beneficiary Verification
     def status(self):
         try:
             if re.search(r'[a-zA-Z]', self.beneficiary):
-                self.remark = 'Pending'
                 self.acc_name()
             else:
                 print(f'Beneficiary\'s Acc No: {self.beneficiary}') 
                 self.remark = 'Successful'
-                # self.another()
         except:
                 ValueError(Fore.RED+' Values cant\'t be an alphabet '+Style.RESET_ALL)
                 self.status()
                 
 
-        # myquery = 'SELECT * FROM details_table WHERE username =%s AND password =%s'
-        # val = (login, pwd)
-        
+    # Transfer   
     def transfer(self):
         try:
             self.amount = float(input('Amount: '))
             query = "SELECT * FROM details_table WHERE username=%s AND password=%s"
             val = (self.login, self.pwd)
             mycursor.execute(query,val)
-            # mycursor.execute(query,val)
             output = mycursor.fetchall()
             if output:
                 acc_no = output[0][9]
@@ -364,6 +358,7 @@ class Bank:
         finally:
             print(' ')  
 
+    # Adding Account Balance
     def addd(self):
         query = "SELECT * FROM details_table WHERE username=%s AND acc_no=%s"
         val = (self.user, self.beneficiary)
@@ -392,11 +387,11 @@ class Bank:
                 else:
                     print(Fore.RED+'minimum bal is N100.00!'+Style.RESET_ALL)
                     self.transfer()
-
+    
+    # Deposit
     def deposit(self):
         # try:  
         self.amount = float(input('Amount: '))
-        # self.beneficiary
         query = "SELECT * FROM details_table WHERE username=%s AND password=%s"
         val = (self.login, self.pwd)
         mycursor.execute(query,val)
@@ -419,10 +414,8 @@ class Bank:
             else:
                 print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
             self.deposit()
-        # except:
-        #     print(Fore.RED+' Check Your Input! '+Style.RESET_ALL)
-        #     self.deposit()
-           
+
+    # Airtime(Others)           
     def airtime(self):
         self.beneficiary = input("Phone number: +234 ")
         if len(self.beneficiary) < 10:
@@ -474,6 +467,8 @@ class Bank:
             else:
                 print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
                 self.transfer()
+
+    # Airtime(Self)            
     def airtime_self(self):
         query = "SELECT * FROM details_table WHERE username=%s AND password=%s"
         val = (self.login, self.pwd)
@@ -517,6 +512,8 @@ class Bank:
             else:
                 print(Fore.RED+'minimum of N100.00 is required!'+Style.RESET_ALL)
                 self.transfer()
+
+     # Airtime Transaction           
     def air_trans(self):
         query = "INSERT INTO transaction_table(username,trans_type, beneficiary_no,amount, remark, date_time,pin) VALUES(%s,%s,%s,%s,%s,%s,%s)"
         var = (self.login, self.trans, self.beneficiary, self.amount, self.remark, self.date,self.pin)
@@ -530,6 +527,7 @@ class Bank:
         ''')
         self.another() 
 
+    # Fetching Username And Password for Pin Confirmation
     def dd(self):
         self.pin =  self.pwd
         query = 'SELECT * FROM details_table WHERE username =%s AND password =%s'
@@ -544,7 +542,8 @@ class Bank:
         else:
             print(Fore.RED+'Incorrect Pin'+Style.RESET_ALL)
             self.pin_confirmation()
-         
+
+    # Transaction History     
     def trans_history(self):
         pwd = pw.pwinput('Pin: ')
         print('Fetching...')
@@ -570,15 +569,8 @@ class Bank:
         else:
             print(Fore.YELLOW+'No Transaction History Yet!'+Style.RESET_ALL)
             self.another()
-        # else:
-        #     print(Fore.RED+'Incorrect Pin!'+Style.RESET_ALL)
-        #     self.trans_history()
-        # except:
-        #     print(Fore.YELLOW+'No Transaction History Yet!'+Style.RESET_ALL) 
-        #     # self.another()
-        # finally:
-        #     self.another()
-
+        
+    # Account Balance
     def acc_bal(self):
         pwd = pw.pwinput('Pin: ')
         print(Fore.GREEN+'Fectching...'+Style.RESET_ALL)
