@@ -203,23 +203,6 @@ class Bank:
                     ''')
             self.pre()       
         
-    # def check(email):
-    #     # self.email = input('Email: ')
-    #     # pattern = r'^\w+@\w\.\w+$'
-    #     # matches = re.match(pattern, self.email)
-    #     pattern = re.compile(r'^[a-zA-Z0-9_%+]@[a-zA-Z0-9_]\.[a-zA-Z]$')
-    #     matches = pattern.search(email)
-    #     return matches
-    #     # print(matches)
-    # if __name__ == "__main__":
-    #     email = input('Email: ')
-    #     matches = check(email)
-    #     if matches:
-    #         print("Valid Email")
-    #     else:
-    #         print('Invalid Email')
-    #         check(email)
-
     def check(self):
         # defined pattern 
         pattern = re.compile(r'^[a-zA-Z0-9_%+]+@[a-zA-Z0-9_]+\.[a-zA-Z]+$')
@@ -259,8 +242,6 @@ class Bank:
                 22. Refresh                  
         ''')
         inp = (input('Select: '))
-        # try:
-        # inp = int(input('Select: '))
         if inp == '1':
             self.trans ='Transfer'
             self.available()
@@ -289,16 +270,6 @@ class Bank:
         else:
             print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)
             self.transaction_type()
-        
-        # except ValueError:
-        #     print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)
-        #     self.transaction_type()
-        # else:
-        #     print("Valid")    
-
-        # finally:    
-        #     print("Loading...")
-        #     time.sleep(1)
 
     def available(self):
             mycursor.execute('SELECT username, acc_no, lastname, othernames FROM details_table')
@@ -338,9 +309,6 @@ class Bank:
             else:
                 print(Fore.RED+'Invalid Account Number'+Style.RESET_ALL)
                 self.acc_name()    
-        # except:
-        #     print(Fore.RED+'Invalid Account Number'+Style.RESET_ALL)
-        #     self.acc_name() 
 
     def status(self):
         try:
