@@ -17,17 +17,11 @@ mycursor = mycon.cursor()
 # mycon.commit()
 
 # Table Creation
-# mycursor.execute('CREATE TABLE details_table(user_id INT(4) PRIMARY KEY AUTO_INCREMENT, lastname VARCHAR(20), othernames VARCHAR(40), username VARCHAR(20), address VARCHAR(100), email VARCHAR(40), phone_number INT(12), bvn VARCHAR(10), nin VARCHAR(10), acc_no VARCHAR(20), bal FLOAT(10), password VARCHAR(10), pin VARCHAR(4))')
+# mycursor.execute('CREATE TABLE details_table(user_id INT(4) PRIMARY KEY AUTO_INCREMENT, lastname VARCHAR(20), othernames VARCHAR(40), username VARCHAR(20), address VARCHAR(100), email VARCHAR(40), phone_number INT(10), bvn VARCHAR(10), nin VARCHAR(10), acc_no VARCHAR(20), bal FLOAT(10), password VARCHAR(10), pin VARCHAR(4))')
 # mycon.commit()
 
 
-# mycursor.execute('CREATE TABLE transaction_table(trans_id INT(4) PRIMARY KEY AUTO_INCREMENT,username VARCHAR(20), trans_type VARCHAR(20), beneficiary_no VARCHAR(15), remark VARCHAR(10)), date_time VARCHAR(30), pin VARCHAR(4))')
-# mycon.commit()
-
-# mycursor.execute('ALTER TABLE transaction_table ADD time VARCHAR(11)')
-# mycon.commit()
-
-# mycursor.execute('ALTER TABLE transaction_table ADD date VARCHAR(10)')
+# mycursor.execute('CREATE TABLE transaction_table(trans_id INT(4) PRIMARY KEY AUTO_INCREMENT,username VARCHAR(20), trans_type VARCHAR(20), beneficiary_no VARCHAR(15), amount FLOAT(10), remark VARCHAR(10)), date_time VARCHAR(30), pin VARCHAR(4))')
 # mycon.commit()
 
 
@@ -94,6 +88,7 @@ class Bank:
         else:
             print(f'{Fore.RED} Invalid Input! Try again{Style.RESET_ALL}')
             self.presignIN()
+    
     # Confirmation Before SignIn
     def pre(self):
         print(Fore.GREEN+"  1"+Style.RESET_ALL+" for forgotten password"+Fore.GREEN+" ENTER "+Style.RESET_ALL+" to continue")
@@ -163,6 +158,7 @@ class Bank:
                 else:
                         print(Fore.RED+'Invalid Option!'+Style.RESET_ALL)
                         self.signIn()
+   
     # SignUp  
     def  signUp(self):  
         self.lastname = input('Last Name: ')
@@ -176,11 +172,13 @@ class Bank:
         self.acc_no = random.randint(2000000000, 2100000000) 
         self.bal = float(0.0)
         self.bvn = random.randint(5000000000, 5100000000)
-        self.password = pw.pwinput("Password: ")
-        self.pin = pw.pwinput("Enter your 4 digits pin: ")
+        self.signUp_password_check()
+        self.signUp_pin_check()
         
         print('Loading...')
         time.sleep(2)
+
+        # SignIn Query
         try:
                     signup = "INSERT INTO details_table(lastname, othernames, username, address, email, phone_number, bvn, nin, acc_no, bal, password, pin) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                     val = (self.lastname.strip().upper(), self.othernames.strip().upper(), self.username.strip(), self.address.strip(), self.email.strip(), self.phone_number.strip(), self.bvn, self.nin, self.acc_no, self.bal, self.password, self.pin)
@@ -230,6 +228,47 @@ class Bank:
             else:
                 pass
 
+    # Checking Length of Password
+    def signUp_password_check(self):
+        self.password = pw.pwinput("Password: ")
+        if len(self.password) != 6:
+            print(Fore.RED+'Password should be Length of 6'+Style.RESET_ALL)
+            self.signUp_password_check()
+        else:
+           pass
+
+    # Checking Length of Pin
+    def signUp_pin_check(self):
+        #  pin = int(pw.pwinput("Enter your 4 digits pin: "))
+        #  self.pin = int(pw.pwinput("Confirm pin: "))
+
+        #  try:
+        pin = int(pw.pwinput("Enter your 4 digits pin: "))
+        self.pin = int(pw.pwinput("Confirm pin: "))
+        if len(self.pin) != 4 and pin == self.pin:
+                print(Fore.RED+"Invalid Pin Length"+Style.RESET_ALL)
+                self.signUp_pin_check()
+        # elif len(self.pin) == 4 and pin == self.pin and self.pin != int(self.pin):
+        #         print(Fore.RED+"Input must be digits"+Style.RESET_ALL)
+                self.signUp_pin_check()       
+        elif len(self.pin) == 4 and pin != self.pin:
+                print(Fore.YELLOW+"Loading"+Style.RESET_ALL)
+                time.sleep(2)
+                print(Fore.GREEN+"Pin does not match"+Style.RESET_ALL)
+                self.signUp_pin_check()
+        elif len(self.pin) == 4 and pin == self.pin:
+                print(Fore.YELLOW+"Loading"+Style.RESET_ALL)
+                time.sleep(2)
+                print(Fore.GREEN+"Successful"+Style.RESET_ALL)
+                    
+
+        else:
+                print(Fore.RED+"Invalid Input, Try Again!"+Style.RESET_ALL)
+                self.signUp_pin_check() 
+        #  except:
+        #         print(Fore.RED+"Input must be digits"+Style.RESET_ALL) 
+        #         self.signUp_pin_check()             
+
     # Transaction Type
     def transaction_type(self):
         print('''
@@ -269,6 +308,7 @@ class Bank:
         else:
             print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)
             self.transaction_type()
+
     # Registered Account
     def available(self):
             mycursor.execute('SELECT username, acc_no, lastname, othernames FROM details_table')
@@ -390,7 +430,6 @@ class Bank:
     
     # Deposit
     def deposit(self):
-        # try:  
         self.amount = float(input('Amount: '))
         query = "SELECT * FROM details_table WHERE username=%s AND password=%s"
         val = (self.login, self.pwd)
@@ -756,7 +795,8 @@ class Bank:
         self.remark = 'Successful'
         self.pin_confirmation()
         self.another()
-
+    
+    # Another Transaction
     def another(self):
         time.sleep(1)
         print('Enter for Another Transaction or 0 to exit')
@@ -765,7 +805,9 @@ class Bank:
             print(Fore.RED+'Exit!'+Style.RESET_ALL)
             sys.exit()
         else:
-            self.transaction_type()   
+            self.transaction_type()  
+
+    # Pin Confirmation         
     def pin_confirmation(self) : 
         self.pin =  int(pw.pwinput('Pin: '))
         print(Fore.YELLOW+'Loading...'+Style.RESET_ALL)
@@ -786,6 +828,8 @@ class Bank:
         t = datetime.now()
         self.date = t.strftime("%d/%m/%Y %H:%M:%S")    
         self.tt()
+
+    # Trasaction Table Query    
     def tt(self):
         mytran = "INSERT INTO transaction_table(username,trans_type, beneficiary_no,amount, remark, date_time,pin) VALUES(%s,%s,%s,%s,%s,%s,%s)"
         var = (self.login, self.trans, self.beneficiary, self.amount, self.remark, self.date,self.pin)
