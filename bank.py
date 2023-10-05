@@ -7,6 +7,7 @@ import pwinput as pw
 import re
 from datetime import date, datetime
 from prettytable import PrettyTable
+# import email_val
 
 mycon = sql.connect(host = '127.0.0.1', user = 'root', passwd ='', database = 'base_db')
 mycursor = mycon.cursor()
@@ -145,17 +146,32 @@ class Bank:
                 print(Fore.YELLOW+'Logging In...'+Style.RESET_ALL)
                 time.sleep(2)
                 print(Fore.GREEN+'Welcome'+Style.RESET_ALL)
-                self.transaction_type()       
-            else:
-                    print(Fore.RED+'Incorrect Username or Password'+Style.RESET_ALL)
+                self.transaction_type()
+            elif details:
+                self.login != details[0][3]
+                self.pwd != details[0][11]
+                print(Fore.RED+'Incorrect Username or Password'+Style.RESET_ALL)
+                print('''
+                        1. Menu
+                        0. Try again
+                ''')
+                user = input('Select: ')
+                if user == '1':
+                    self.pre()
+                elif user == '0':
                     self.signIn()
+                else:
+                        print(Fore.RED+'Invalid Option!'+Style.RESET_ALL)
+                        self.signIn()
         
     def  signUp(self):  
         self.lastname = input('Last Name: ')
         self.othernames = input('Other Names: ')
         self.address = input('Address: ')
-        self.email = input('Email: ')
-        self.phone_number = input('Phone number: +234 ')
+        self.check()
+        # self.email = email_val()
+        # self.email = self.check()
+        self.phone_check()
         self.username = input('Username: ')
     
         self.nin = random.randint(1000000000, 1100000000) 
@@ -167,42 +183,72 @@ class Bank:
         
         print('Loading...')
         time.sleep(2)
-
-        # print(f'''
-        #             Hi! {self.username}
-        #             Name {self.lastname.upper()} {self.othernames.upper()}
-        #             Account Number: {self.acc_no}       bvn: {self.bvn}     nin: {self.nin}
-        #             Phone Number: {self.phone_number}    Email: {self.email.strip()}         
-        # ''')
-
-
-        # signup = "INSERT INTO details_table(lastname, othernames, username, address, email, phone_number, bvn, nin, acc_no, bal, password, pin) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        # val = (self.lastname.strip().upper(), self.othernames.strip().upper(), self.username.strip(), self.address.strip(), self.email.strip(), self.phone_number.strip(), self.bvn, self.nin, self.acc_no, self.bal, self.password, self.pin)
-        # mycursor.execute(signup, val)
-        # mycon.commit()
-        
-        
         try:
-            signup = "INSERT INTO details_table(lastname, othernames, username, address, email, phone_number, bvn, nin, acc_no, bal, password, pin) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            val = (self.lastname.strip().upper(), self.othernames.strip().upper(), self.username.strip(), self.address.strip(), self.email.strip(), self.phone_number.strip(), self.bvn, self.nin, self.acc_no, self.bal, self.password, self.pin)
-            mycursor.execute(signup, val)
-            mycon.commit()
+                    signup = "INSERT INTO details_table(lastname, othernames, username, address, email, phone_number, bvn, nin, acc_no, bal, password, pin) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    val = (self.lastname.strip().upper(), self.othernames.strip().upper(), self.username.strip(), self.address.strip(), self.email.strip(), self.phone_number.strip(), self.bvn, self.nin, self.acc_no, self.bal, self.password, self.pin)
+                    mycursor.execute(signup, val)
+                    mycon.commit()
 
 
-            print(f'''
-                    Hi! {self.username}
-                    Name {self.lastname.upper()} {self.othernames.upper()}
-                    Account Number: {self.acc_no}       bvn: {self.bvn}     nin: {self.nin}
-                    Phone Number: {self.phone_number}    Email: {self.email.strip()}         
-            ''')
-            self.pre()
-            sys.exit()
-        except NameError:
+                    
+        except:
             print(Fore.RED+"Username or Email Alredy Exits!"+Style.RESET_ALL)
-            # self.signUp()
-        except ValueError:
-            print('woos')    
-          
+            self.signUp() 
+        else:
+            print(f'''
+                            Hi! {self.username}
+                            Name {self.lastname.upper()} {self.othernames.upper()}
+                            Account Number: {self.acc_no}       bvn: {self.bvn}     nin: {self.nin}
+                            Phone Number: {self.phone_number}    Email: {self.email.strip()}         
+                    ''')
+            self.pre()       
+        
+    # def check(email):
+    #     # self.email = input('Email: ')
+    #     # pattern = r'^\w+@\w\.\w+$'
+    #     # matches = re.match(pattern, self.email)
+    #     pattern = re.compile(r'^[a-zA-Z0-9_%+]@[a-zA-Z0-9_]\.[a-zA-Z]$')
+    #     matches = pattern.search(email)
+    #     return matches
+    #     # print(matches)
+    # if __name__ == "__main__":
+    #     email = input('Email: ')
+    #     matches = check(email)
+    #     if matches:
+    #         print("Valid Email")
+    #     else:
+    #         print('Invalid Email')
+    #         check(email)
+
+    def check(self):
+        # defined pattern 
+        pattern = re.compile(r'^[a-zA-Z0-9_%+]+@[a-zA-Z0-9_]+\.[a-zA-Z]+$')
+
+        # matching of pattern
+        self.email = input('Email: ')
+        matches = pattern.search(self.email)
+        if matches:
+            print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
+            time.sleep(2)
+            print(Fore.GREEN+"Valid Email"+Style.RESET_ALL)
+        else:
+            print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
+            time.sleep(2)
+            print(Fore.RED+'Invalid Email'+Style.RESET_ALL)
+            
+            self.check()
+    
+    def phone_check(self):
+            self.phone_number = input('Phone number: +234 ')
+            if len(self.phone_number) != 10:
+                pattern = r'\d+'
+                matches = re.match(pattern, self.phone_number)
+                print(Fore.RED+"Invalid Phone Number"+Style.RESET_ALL)
+                self.phone_check()
+            else:
+                pass
+                # print(Fore.GREEN+'Valid'+Style.RESET_ALL) 
+
     def transaction_type(self):
         print('''
                 Select to perform any trasanction
@@ -227,10 +273,8 @@ class Bank:
         elif inp == '4':
             self.airtime()
         elif inp == '5':
-            # self.trans = 'Inquiries'
             self.acc_bal()
         elif inp == '6':
-            # self.trans = 'Inquiries'
             self.trans_history()
         elif inp == '7':
             self.bills()
@@ -258,8 +302,6 @@ class Bank:
 
     def available(self):
             mycursor.execute('SELECT username, acc_no, lastname, othernames FROM details_table')
-            # details = mycursor.fetchall()
-            # print(details)
             rows = mycursor.fetchall()
             table = PrettyTable()
             table.field_names = [i[0] for i in mycursor.description]
@@ -269,35 +311,33 @@ class Bank:
             time.sleep(2)    
             print(f'{Back.BLUE}{table}{Style.RESET_ALL}')
             self.acc_name()
-            # self.another()
 
     def acc_name(self):
         self.user = input("Beneficiary's Username: ")
         self.beneficiary = input('Account No: ')  
-        # try:
-        query = "SELECT * FROM details_table WHERE username=%s AND acc_no=%s"
-        val = (self.user, self.beneficiary)
-        mycursor.execute(query,val)
-        # mycon.commit()
-        output = mycursor.fetchall()
-        if output:
-            self.user = output[0][3]
-            # self.pin = output[0][12]
-            acc_no = output[0][9]
-            # balance = output[0][10]
-            lastname = output[0][1]
-            othernames = output[0][2]
-            
-            print(Fore.YELLOW+"Loading..."+Style.RESET_ALL)
-            time.sleep(2)
-            print(f'''
-                    Account Number: {acc_no}
-                    Beneficiary's Name: {lastname} {othernames}
-            ''')
-            self.status()
-        else:
-            print(Fore.RED+'Invalid Account Number'+Style.RESET_ALL)
-            self.acc_name()    
+        if len(self.beneficiary) == 10:
+            query = "SELECT * FROM details_table WHERE username=%s AND acc_no=%s"
+            val = (self.user, self.beneficiary)
+            mycursor.execute(query,val)
+            output = mycursor.fetchall()
+            if output:
+                self.user = output[0][3]
+                # self.pin = output[0][12]
+                acc_no = output[0][9]
+                # balance = output[0][10]
+                lastname = output[0][1]
+                othernames = output[0][2]
+                
+                print(Fore.YELLOW+"Loading..."+Style.RESET_ALL)
+                time.sleep(2)
+                print(f'''
+                        Account Number: {acc_no}
+                        Beneficiary's Name: {lastname} {othernames}
+                ''')
+                self.status()
+            else:
+                print(Fore.RED+'Invalid Account Number'+Style.RESET_ALL)
+                self.acc_name()    
         # except:
         #     print(Fore.RED+'Invalid Account Number'+Style.RESET_ALL)
         #     self.acc_name() 
