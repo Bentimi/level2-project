@@ -596,6 +596,7 @@ class Bank:
             print('Pin: ')
             self.acc_bal()
 
+    # Inquiries
     def inq(self):
         print('''
                     Available services
@@ -612,7 +613,9 @@ class Bank:
             self.transaction_type() 
         else:
             print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)    
-            self.inq()  
+            self.inq() 
+
+    # Changing of Password from Inquires         
     def password_change(self):
         password = pw.pwinput('Old Password: ')
         pwd1 = pw.pwinput('New Password: ')
@@ -652,6 +655,7 @@ class Bank:
             print(Fore.RED+'Wrong Input!'+Style.RESET_ALL)
             self.password_change()    
 
+    # Changing of Pin from Inquires  
     def pin_change(self):
         self.pn = pw.pwinput('Old Pin: ')
         self.pwd1 = pw.pwinput('New Pin: ')
@@ -692,7 +696,7 @@ class Bank:
                 time.sleep(2)
                 print(Fore.RED+"Invalid Pin"+Style.RESET_ALL)             
                 self.pin_change() 
-
+    # Updating of Pin into Transaction Table
     def pnn(self):
         myquery = 'SELECT * FROM transaction_table WHERE username=%s AND pin=%s'
         myval = (self.login, self.pn)
@@ -711,6 +715,7 @@ class Bank:
         else:
             print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)   
 
+    # Bills
     def bills(self):
        time.sleep(1)
        print(f'''
@@ -719,8 +724,6 @@ class Bank:
                 3. Internet
                 4. TV
         ''')
-    #    self.amount = float(input('Amount: '))
-    #    self.beneficiary = random.randint(1000000000, 1999999999)
        user = input('Select: ')
        if user == '1':
            net = 'Bills'
@@ -744,9 +747,9 @@ class Bank:
            print('Awe')
        else:
            print(Fore.RED+'Invalid'+Style.RESET_ALL)                
-    #    self.pin_confirmation()
-    #    self.another()
-
+           self.bills()   
+    
+    # Biils Transaction
     def bill_inp(self):
         self.amount = float(input('Amount: '))
         self.beneficiary = random.randint(1000000000, 1999999999)
