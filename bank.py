@@ -230,7 +230,7 @@ class Bank:
         if matches:
             print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
             time.sleep(2)
-            print(Fore.GREEN+"Valid Email"+Style.RESET_ALL)
+            # print(Fore.GREEN+"Valid Email"+Style.RESET_ALL)
         else:
             print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
             time.sleep(2)
