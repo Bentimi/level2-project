@@ -208,11 +208,11 @@ class Bank:
         self.email = input('Email: ')
         matches = pattern.search(self.email)
         if matches:
-            print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
-            time.sleep(2)
+            # print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
+            time.sleep(1)
         else:
-            print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
-            time.sleep(2)
+            # print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
+            time.sleep(1)
             print(Fore.RED+'Invalid Email'+Style.RESET_ALL)
             
             self.check()
@@ -698,7 +698,7 @@ class Bank:
             self.pwd = details[0][11]
             self.pn = details[0][12]
             if re.match(r"^\d+$", self.new_pwd):
-                # if len(self.phone_number) == :
+                if self.pwd1 == self.new_pwd:
                     
                     if len(self.pwd1) == 4 and  len(self.new_pwd) == 4:
                         self.pnn()
@@ -724,19 +724,20 @@ class Bank:
                             time.sleep(2)
                             print(Fore.RED+"pin should be 4 digits"+Style.RESET_ALL)
 
-                # else:
-                #     time.sleep(1)
-                #     print(Fore.RED+'Length must be 10'+Style.RESET_ALL) 
-                #     self.phone_check()       
+                else:
+                    time.sleep(1)
+                    print(Fore.RED+'Pin does not match'+Style.RESET_ALL) 
+                    self.pin_change()       
             else:
                 time.sleep(1)
                 print(Fore.RED+'pin must be digit'+Style.RESET_ALL)
                 self.pin_change()             
         else:
-                print('Loading...')
+                print(Fore.YELLOW+"Loading..."+Style.RESET_ALL) 
                 time.sleep(2)
                 print(Fore.RED+"Invalid Pin"+Style.RESET_ALL)             
                 self.pin_change() 
+
     # Updating of Pin into Transaction Table
     def pnn(self):
         myquery = 'SELECT * FROM transaction_table WHERE username=%s AND pin=%s'
@@ -754,7 +755,7 @@ class Bank:
             time.sleep(2)
             print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
         else:
-            print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)   
+            print(Fore.YELLOW+'No Transaction has been made yet!'+Style.RESET_ALL)   
 
     # Bills
     def bills(self):
