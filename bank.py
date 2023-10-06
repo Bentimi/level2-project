@@ -141,10 +141,10 @@ class Bank:
                 print(Fore.YELLOW+'Logging In...'+Style.RESET_ALL)
                 time.sleep(2)
                 print(Fore.GREEN+'Welcome'+Style.RESET_ALL)
-                self.transaction_type()
-            elif details:
-                self.login != details[0][3]
-                self.pwd != details[0][11]
+                self.transaction_type()       
+            else:
+                    # print(Fore.RED+'Incorrect Username or Password'+Style.RESET_ALL)
+                    
                 print(Fore.RED+'Incorrect Username or Password'+Style.RESET_ALL)
                 print('''
                         1. Menu
@@ -175,7 +175,7 @@ class Bank:
         self.signUp_password_check()
         self.signUp_pin_check()
         
-        print('Loading...')
+        print(Fore.YELLOW+'Loading...'+Style.RESET_ALL)
         time.sleep(2)
 
         # SignIn Query
@@ -220,13 +220,17 @@ class Bank:
     # Phone Number Pattern Confirmation
     def phone_check(self):
             self.phone_number = input('Phone number: +234 ')
-            if len(self.phone_number) != 10:
-                pattern = r'\d+'
-                matches = re.match(pattern, self.phone_number)
-                print(Fore.RED+"Invalid Phone Number"+Style.RESET_ALL)
-                self.phone_check()
+            if re.match(r"^\d+$", self.phone_number):
+                if len(self.phone_number) == 10:
+                    pass
+                else:
+                    time.sleep(1)
+                    print(Fore.RED+'Length must be 10'+Style.RESET_ALL) 
+                    self.phone_check()       
             else:
-                pass
+                time.sleep(1)
+                print(Fore.RED+'Phone number must be digit'+Style.RESET_ALL)
+                self.phone_check()    
 
     # Checking Length of Password
     def signUp_password_check(self):
@@ -239,35 +243,20 @@ class Bank:
 
     # Checking Length of Pin
     def signUp_pin_check(self):
-        #  pin = int(pw.pwinput("Enter your 4 digits pin: "))
-        #  self.pin = int(pw.pwinput("Confirm pin: "))
+        pin = pw.pwinput("Enter your 4 digits pin: ")
+        self.pin = pw.pwinput("Confirm pin: ")
 
-        #  try:
-        pin = int(pw.pwinput("Enter your 4 digits pin: "))
-        self.pin = int(pw.pwinput("Confirm pin: "))
-        if len(self.pin) != 4 and pin == self.pin:
-                print(Fore.RED+"Invalid Pin Length"+Style.RESET_ALL)
-                self.signUp_pin_check()
-        # elif len(self.pin) == 4 and pin == self.pin and self.pin != int(self.pin):
-        #         print(Fore.RED+"Input must be digits"+Style.RESET_ALL)
-                self.signUp_pin_check()       
-        elif len(self.pin) == 4 and pin != self.pin:
-                print(Fore.YELLOW+"Loading"+Style.RESET_ALL)
-                time.sleep(2)
-                print(Fore.GREEN+"Pin does not match"+Style.RESET_ALL)
-                self.signUp_pin_check()
-        elif len(self.pin) == 4 and pin == self.pin:
-                print(Fore.YELLOW+"Loading"+Style.RESET_ALL)
-                time.sleep(2)
-                print(Fore.GREEN+"Successful"+Style.RESET_ALL)
-                    
-
+        if re.match(r"^\d+$", self.pin):
+                if len(self.pin) == 4 and pin == self.pin:
+                    pass
+                else:
+                    time.sleep(1)
+                    print(Fore.RED+'Length must be 4'+Style.RESET_ALL) 
+                    self.signUp_pin_check()       
         else:
-                print(Fore.RED+"Invalid Input, Try Again!"+Style.RESET_ALL)
-                self.signUp_pin_check() 
-        #  except:
-        #         print(Fore.RED+"Input must be digits"+Style.RESET_ALL) 
-        #         self.signUp_pin_check()             
+            time.sleep(1)
+            print(Fore.RED+'Pin must be digit'+Style.RESET_ALL)
+            self.signUp_pin_check()
 
     # Transaction Type
     def transaction_type(self):
@@ -352,6 +341,7 @@ class Bank:
     def status(self):
         try:
             if re.search(r'[a-zA-Z]', self.beneficiary):
+                print(Fore.RED+'Invalid Acc No!'+Style.RESET_ALL)
                 self.acc_name()
             else:
                 print(f'Beneficiary\'s Acc No: {self.beneficiary}') 
@@ -707,29 +697,41 @@ class Bank:
             self.login = details[0][3]
             self.pwd = details[0][11]
             self.pn = details[0][12]
-            if len(self.pwd1) == 4 and  len(self.new_pwd) == 4:
-                self.pnn()
-                query = "UPDATE details_table SET pin=%s WHERE username=%s"
-                val = (self.new_pwd, self.login)
-                mycursor.execute(query, val)
-                mycon.commit()
-                self.another()
+            if re.match(r"^\d+$", self.new_pwd):
+                # if len(self.phone_number) == :
+                    
+                    if len(self.pwd1) == 4 and  len(self.new_pwd) == 4:
+                        self.pnn()
+                        query = "UPDATE details_table SET pin=%s WHERE username=%s"
+                        val = (self.new_pwd, self.login)
+                        mycursor.execute(query, val)
+                        mycon.commit()
+                        self.another()
 
-            elif self.pwd1 != self.new_pwd:
-                print(Fore.YELLOW+"Loading..."+Style.RESET_ALL) 
-                time.sleep(2)
-                print(Fore.RED+'pin does not match'+Style.RESET_ALL)
-                print('Press 0 to Terminate or 1 to continue')  
-                user = input('Select: ')
-                if user == '0':
-                    sys.exit()
-                elif user == '1':
-                    self.transaction_type()
+                    elif self.pwd1 != self.new_pwd:
+                        print(Fore.YELLOW+"Loading..."+Style.RESET_ALL) 
+                        time.sleep(2)
+                        print(Fore.RED+'pin does not match'+Style.RESET_ALL)
+                        print('Press 0 to Terminate or 1 to continue')  
+                        user = input('Select: ')
+                        if user == '0':
+                            sys.exit()
+                        elif user == '1':
+                            self.transaction_type()
 
+                    else:
+                            print('Loading...')
+                            time.sleep(2)
+                            print(Fore.RED+"pin should be 4 digits"+Style.RESET_ALL)
+
+                # else:
+                #     time.sleep(1)
+                #     print(Fore.RED+'Length must be 10'+Style.RESET_ALL) 
+                #     self.phone_check()       
             else:
-                    print('Loading...')
-                    time.sleep(2)
-                    print(Fore.RED+"pin should be 4 digits"+Style.RESET_ALL) 
+                time.sleep(1)
+                print(Fore.RED+'pin must be digit'+Style.RESET_ALL)
+                self.pin_change()             
         else:
                 print('Loading...')
                 time.sleep(2)
