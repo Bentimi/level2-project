@@ -7,7 +7,6 @@ import pwinput as pw
 import re
 from datetime import date, datetime
 from prettytable import PrettyTable
-# import email_val
 
 mycon = sql.connect(host = '127.0.0.1', user = 'root', passwd ='', database = 'base_db')
 mycursor = mycon.cursor()
