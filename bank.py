@@ -7,6 +7,7 @@ import pwinput as pw
 import re
 from datetime import date, datetime
 from prettytable import PrettyTable
+import termtables as tt
 
 mycon = sql.connect(host = '127.0.0.1', user = 'root', passwd ='', database = 'base_db')
 mycursor = mycon.cursor()
@@ -301,13 +302,15 @@ class Bank:
     def available(self):
             mycursor.execute('SELECT username, acc_no, lastname, othernames FROM details_table')
             rows = mycursor.fetchall()
-            table = PrettyTable()
-            table.field_names = [i[0] for i in mycursor.description]
-            for row in rows:
-                table.add_row(row)
+            # table = PrettyTable()
+            # table.field_names = [i[0] for i in mycursor.description]
+            # for row in rows:
+            #     table.add_row(row)
+            header = ["username", "acc_no", "lastname", "othernames"]
             print(Fore.YELLOW+'Fetching Available Customers...'+Style.RESET_ALL)
-            time.sleep(2)    
-            print(f'{Back.BLUE}{table}{Style.RESET_ALL}')
+            time.sleep(2)
+            tt.print(rows, header)    
+            # print(f'{Back.BLUE}{table}{Style.RESET_ALL}')
             self.acc_name()
 
     # Account Name Verification
@@ -328,8 +331,8 @@ class Bank:
                 print(Fore.YELLOW+"Loading..."+Style.RESET_ALL)
                 time.sleep(2)
                 print(f'''
-                        Account Number: {acc_no}
-                        Beneficiary's Name: {lastname} {othernames}
+                        {Fore.YELLOW}Account Number: {acc_no}
+                        Beneficiary's Name: {lastname} {othernames}{Style.RESET_ALL}
                 ''')
                 self.status()
             else:
@@ -383,6 +386,7 @@ class Bank:
             print(Fore.RED+' Check Your Input! '+Style.RESET_ALL)
             self.another()
         except ValueError:
+            print(Fore.RED+' Check Your Input! '+Style.RESET_ALL)
             self.transfer()      
         finally:
             print(' ')  
@@ -405,7 +409,7 @@ class Bank:
                     mycon.commit()
 
                     self.pin_confirmation()
-                    print(Fore.BLUE+'Transaction successful'+Style.RESET_ALL)
+                    print(Fore.GREEN+'Transaction successful'+Style.RESET_ALL)
                     time.sleep(2)
                     print(f'''
                             {Fore.YELLOW}N{self.amount}K has been debited from your account.
@@ -573,47 +577,67 @@ class Bank:
 
     # Transaction History     
     def trans_history(self):
-        pwd = pw.pwinput('Pin: ')
-        print('Fetching...')
+        self.pwd = pw.pwinput('Pin: ')
+        print(Fore.YELLOW+'Fetching...'+Style.RESET_ALL)
         time.sleep(3)
         # try:
         query = "SELECT * FROM transaction_table WHERE username=%s AND pin=%s"
-        val = (self.login, pwd)
+        val = (self.login, self.pwd)
         mycursor.execute(query,val)
         output = mycursor.fetchall()
-        if output:
-            self.login = output[0][1]
-            self.pin = output[0][7]
-            que = 'SELECT trans_id, username, trans_type, beneficiary_no, amount, remark, date_time  FROM transaction_table WHERE username=%s AND pin=%s'
-            val = (self.login, pwd)
-            mycursor.execute(que, val)
-            rows = mycursor.fetchall()
-            table = PrettyTable()
-            table.field_names = [i[0] for i in mycursor.description]
-            for row in rows:
-                table.add_row(row)
-            print(f'{Back.BLUE}{table}{Style.RESET_ALL}')
-            self.another()
+        if re.match(r"^\d+$", self.pwd):
+            self.thv()
+            if output:
+                self.login = output[0][1]
+                self.pwd = output[0][7]
+                que = 'SELECT trans_id, trans_type, beneficiary_no, amount, remark, date_time  FROM transaction_table WHERE username=%s AND pin=%s'
+                val = (self.login, self.pwd)
+                mycursor.execute(que, val)
+                rows = mycursor.fetchall()
+
+                header = ["trans_id","trans_type", "beneficiary_no", "amount", "remark", "date_time" ]
+                tt.print(rows,header)
+                self.another()
+            else:
+                    print(Fore.YELLOW+'No Transaction Yet!'+Style.RESET_ALL)
+                    self.another()
         else:
-            print(Fore.YELLOW+'No Transaction History Yet!'+Style.RESET_ALL)
-            self.another()
-        
+             print(Fore.RED+'Pin must be digits'+Style.RESET_ALL)
+             self.trans_history()   
+
+    # Transaction History's Pin Verification
+    def thv(self):
+        query = 'SELECT * FROM details_table WHERE username =%s AND pin=%s'
+        val = (self.login, self.pwd)
+        mycursor.execute(query, val)
+
+        details = mycursor.fetchall()
+
+        if details:
+            self.login = details[0][3]
+            self.pin = details[0][12]
+        else:
+            print(Fore.RED+'Incorrect Pin'+Style.RESET_ALL)
+            self.trans_history()                 
+
     # Account Balance
     def acc_bal(self):
         pwd = pw.pwinput('Pin: ')
-        print(Fore.GREEN+'Fectching...'+Style.RESET_ALL)
-        time.sleep(3)
+        print(Fore.YELLOW+'Checking...'+Style.RESET_ALL)
+        time.sleep(2)
         query = "SELECT * FROM details_table WHERE username=%s AND pin=%s"
         val = (self.login, pwd)
         mycursor.execute(query,val)
         output = mycursor.fetchall()
-        if output:
+        if output and re.match(r"^\d+$", pwd):
             self.lastname = output[0][1]
             self.othernames = output[0][2]
             self.login = output[0][3]
             self.pin = output[0][12]
             acc_no = output[0][9]
             balance = output[0][10]
+            print(Fore.GREEN+'Fectching...'+Style.RESET_ALL)
+            time.sleep(2)
             print(f'''
                         {Fore.YELLOW}Name: {self.lastname} {self.othernames}
                         Account Number: {acc_no}
@@ -621,7 +645,7 @@ class Bank:
             ''')
             self.another()
         else:
-            print('Pin: ')
+            print(Fore.RED+'Invalid Pin'+Style.RESET_ALL)
             self.acc_bal()
 
     # Inquiries
@@ -811,7 +835,7 @@ class Bank:
 
     # Pin Confirmation         
     def pin_confirmation(self) : 
-        self.pin =  int(pw.pwinput('Pin: '))
+        self.pin =  pw.pwinput('Pin: ')
         print(Fore.YELLOW+'Loading...'+Style.RESET_ALL)
         time.sleep(1)
         query = 'SELECT * FROM details_table WHERE username =%s AND pin =%s'
@@ -823,6 +847,14 @@ class Bank:
         if details:
             self.login = details[0][3]
             self.pin = details[0][12]
+            # user = input('Number: +234 ')
+            if re.match(r"^\d+$", self.pin):
+                if len(self.pin) == 4:
+                    pass
+                else:
+                    print('Length must 4')    
+            else:
+                print('Pin must be digit')  
         else:
             print(Fore.RED+'Incorrect Pin'+Style.RESET_ALL)
             self.pin_confirmation()
