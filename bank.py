@@ -237,8 +237,11 @@ class Bank:
         if len(self.password) != 6:
             print(Fore.RED+'Password should be Length of 6'+Style.RESET_ALL)
             self.signUp_password_check()
+        elif len(self.password) == 6 and re.match(r"^[a-zA-Z]+$", self.password):
+            pass   
         else:
-           pass
+            print(Fore.RED+'Password should be letters'+Style.RESET_ALL)
+            self.signUp_password_check()
 
     # Checking Length of Pin
     def signUp_pin_check(self):
@@ -265,7 +268,7 @@ class Bank:
                 2.  Deposit                  6. Transaction History
                 3.  Airtime(self)            7. Pay Bills
                 4.  Airtime(Others)          00. Inquiries
-                22. Refresh                  
+                22. Refresh                  0.  Exit                
         ''')
         inp = (input('Select: '))
         if inp == '1':
@@ -287,6 +290,11 @@ class Bank:
             self.bills()
         elif inp == '00':
             self.inq()
+        elif inp == '0':
+            print('Loading...')
+            time.sleep(2)
+            print(Fore.RED+'Exit!'+Style.RESET_ALL)
+            sys.exit()
         elif inp == '22':
             print(Fore.YELLOW+"refreshing..."+Style.RESET_ALL)
             time.sleep(5)
