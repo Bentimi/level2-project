@@ -678,7 +678,7 @@ class Bank:
         if details:
             self.login = details[0][3]
             password = details[0][11]
-            if pwd1 == pwd:
+            if pwd1 == pwd and len(pwd) == 6 and re.match(r"^[a-zA-Z]+$", pwd):
                 print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
                 query = "UPDATE details_table SET password=%s WHERE username=%s"
                 val = (pwd, self.login)
@@ -691,20 +691,27 @@ class Bank:
                 print("Checking...") 
                 time.sleep(2)
                 print(Fore.RED+'Password does not match'+Style.RESET_ALL)
-                print('Press 0 to Terminate or 1 to try again')  
+                print(f'''
+                            Press
+                            1. Try Again 
+                            0. Terminate
+                            00. Menu
+                            
+                      ''')  
                 user = input('Select: ')
                 if user == '0':
                     sys.exit()
                 elif user == '1':
-                    self.transaction_type() 
-                else:
                     self.password_change()  
+                     
+                elif user == '00':
+                    self.transaction_type() 
             else:
-                print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)
+                print(Fore.RED+'Password must be 6'+Style.RESET_ALL)
                 self.password_change()    
         else:
-            print(Fore.RED+'Wrong Input!'+Style.RESET_ALL)
-            self.password_change()    
+                print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)
+                self.password_change()            
 
     # Changing of Pin from Inquires  
     def pin_change(self):
