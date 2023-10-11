@@ -146,6 +146,7 @@ class Bank:
                     
                 print(Fore.RED+'Incorrect Username or Password'+Style.RESET_ALL)
                 print('''
+                        Select
                         1. Menu
                         0. Try again
                 ''')
@@ -695,31 +696,46 @@ class Bank:
                 time.sleep(2)
                 print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
                 self.transaction_type() 
+            elif re.match(r"^[a-zA-Z0-9]+$", pwd):
+                print(Fore.YELLOW+"Checking..."+Style.RESET_ALL) 
+                time.sleep(2)
+                print(Fore.RED+'Password must be letters'+Style.RESET_ALL)
+                self.pattern()
             elif pwd1 != pwd:
-                print("Checking...") 
+                print(Fore.YELLOW+"Checking..."+Style.RESET_ALL)
                 time.sleep(2)
                 print(Fore.RED+'Password does not match'+Style.RESET_ALL)
-                print(f'''
-                            Press
-                            1. Try Again 
-                            0. Terminate
-                            00. Menu
-                            
-                      ''')  
-                user = input('Select: ')
-                if user == '0':
-                    sys.exit()
-                elif user == '1':
-                    self.password_change()  
-                     
-                elif user == '00':
-                    self.transaction_type() 
-            else:
+                self.pattern()
+            elif len(pwd) != 6:
+                print(Fore.YELLOW+"Checking..."+Style.RESET_ALL)
+                time.sleep(2)
                 print(Fore.RED+'Password must be 6'+Style.RESET_ALL)
+                self.pattern()
+            else:
+                print(Fore.RED+'Invalid!'+Style.RESET_ALL)
                 self.password_change()    
         else:
                 print(Fore.RED+'Invalid Input!'+Style.RESET_ALL)
-                self.password_change()            
+                self.password_change() 
+
+    # Password Pattern To Change Existing Password
+    def pattern(self):
+        print(f'''
+                    {Fore.YELLOW}Press
+                    1. Try Again 
+                    0. Terminate
+                    00. Menu{Style.RESET_ALL}
+                    
+                ''')  
+        user = input('Select: ')
+        if user == '0':
+            print(Fore.RED+'Exit!'+Style.RESET_ALL)
+            sys.exit()
+        elif user == '1':
+            self.password_change()  
+                
+        elif user == '00':
+            self.transaction_type()                        
 
     # Changing of Pin from Inquires  
     def pin_change(self):
