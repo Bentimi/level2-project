@@ -777,7 +777,14 @@ class Bank:
             time.sleep(2)
             print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
         else:
-            print(Fore.YELLOW+'No Transaction has been made yet!'+Style.RESET_ALL)   
+            print(Fore.YELLOW+'Updating...'+Style.RESET_ALL)
+            time.sleep(2)
+            print(Fore.GREEN+'Updated!'+Style.RESET_ALL)
+            time.sleep(1)
+            print(f"""
+                        {Fore.YELLOW}Dear {self.login.upper()}, no transaction has been made yet!
+                        Try to deposit minimum of N100 for a start. Thank you{Style.RESET_ALL}
+            """)   
 
     # Bills
     def bills(self):
