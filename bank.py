@@ -16,7 +16,7 @@ mycursor = mycon.cursor()
 # mycon.commit()
 
 # Table Creation
-# mycursor.execute('CREATE TABLE details_table(user_id INT(4) PRIMARY KEY AUTO_INCREMENT, lastname VARCHAR(20), othernames VARCHAR(40), username VARCHAR(20), address VARCHAR(100), email VARCHAR(40), phone_number INT(10), bvn VARCHAR(10), nin VARCHAR(10), acc_no VARCHAR(20), bal FLOAT(10), password VARCHAR(10), pin VARCHAR(4))')
+# mycursor.execute('CREATE TABLE details_table(user_id INT(4) PRIMARY KEY AUTO_INCREMENT, lastname VARCHAR(20), othernames VARCHAR(40), username VARCHAR(20), address VARCHAR(100), email VARCHAR(40), phone_number VARCHAR(10), bvn VARCHAR(10), nin VARCHAR(10), acc_no VARCHAR(20), bal FLOAT(10), password VARCHAR(10), pin VARCHAR(4))')
 # mycon.commit()
 
 
